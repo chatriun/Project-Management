@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
-const NewProjectForm = ({ onAddProject }) => {
+const NewProjectForm = ({ onAddProject, onCancelProject }) => {
   const newTitle = useRef();
   const newDescription = useRef();
   const newDueDate = useRef();
 
-  const handleAddProject = () => {
+  const handleAdd = () => {
     onAddProject({
       title: newTitle.current.value,
       description: newDescription.current.value,
@@ -15,17 +15,23 @@ const NewProjectForm = ({ onAddProject }) => {
     newDescription.current.value = "";
     newDueDate.current.value = "";
   };
-  // console.log(projectForm);
+
+  const handleCancel = () => {
+    onCancelProject();
+  };
 
   return (
     <section className="mx-auto my-48">
       <div>
-        <button className="ml-6 mt-2 px-4 py-2 bg-stone-600 rounded-lg text-slate-200 font-normal">
+        <button
+          className="ml-6 mt-2 px-4 py-2 bg-stone-600 rounded-lg text-slate-200 font-normal"
+          onClick={handleCancel}
+        >
           Cancel
         </button>
         <button
           className="ml-6 mt-2 px-4 py-2 bg-stone-600 rounded-lg text-slate-200 font-normal"
-          onClick={handleAddProject}
+          onClick={handleAdd}
         >
           Save
         </button>

@@ -6,10 +6,12 @@ import NoProject from "./components/NoProject";
 
 const App = () => {
   const [projectForm, setProjectForm] = useState([]);
-  const [pageProject, setPageProject] = useState("");
+  const [pageProject, setPageProject] = useState("NoProject");
   const handleAddProject = () => {
-    console.log("handleAddProject was click");
     setPageProject("NewProjectForm");
+  };
+  const handleCancelProject = () => {
+    setPageProject("NoProject");
   };
 
   const handleForm = (newProject) => {
@@ -17,16 +19,41 @@ const App = () => {
       const updateProject = [...preProject, newProject];
       return updateProject;
     });
+    setPageProject(newProject.title);
   };
-  console.log(projectForm);
+
+  const handleSelectProject = (title) => {
+    setPageProject(title);
+  };
+
+  let pageContent;
+  const selectProject = projectForm.filter(
+    (project) => project.title === pageProject
+  );
+  console.log(selectProject);
+  if (pageProject === "NewProjectForm") {
+    pageContent = (
+      <NewProjectForm
+        onAddProject={handleForm}
+        onCancelProject={handleCancelProject}
+      />
+    );
+  } else if (pageProject === "NoProject") {
+    pageContent = <NoProject onAddProject={handleAddProject} />;
+  } else {
+    pageContent = <ProjectDetail selectProject={selectProject} />;
+  }
+
+  // console.log(pageProject);
+  // console.log(projectForm);
   return (
     <>
-      <YourProject onAddProject={handleAddProject} projectForm={projectForm} />
-      {pageProject === "NewProjectForm" ? (
-        <NewProjectForm onAddProject={handleForm} />
-      ) : (
-        <NoProject />
-      )}
+      <YourProject
+        projectForm={projectForm}
+        onAddProject={handleAddProject}
+        onSelectProject={handleSelectProject}
+      />
+      {pageContent}
     </>
   );
 };
