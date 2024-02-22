@@ -10,6 +10,7 @@ const NewProjectForm = ({ onAddProject, onCancelProject }) => {
       title: newTitle.current.value,
       description: newDescription.current.value,
       dueDate: newDueDate.current.value,
+      task: [],
     });
     newTitle.current.value = "";
     newDescription.current.value = "";

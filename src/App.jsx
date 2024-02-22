@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import NewProjectForm from "./components/NewProjectForm";
 import ProjectDetail from "./components/ProjectDetail";
 import YourProject from "./components/YourProjects";
 import NoProject from "./components/NoProject";
 
+const INITIAL_PROJECT_FORM = [
+  {
+    title: "",
+    description: "",
+    dueDate: "",
+    task: [],
+  },
+];
+
 const App = () => {
   const [projectForm, setProjectForm] = useState([]);
   const [pageProject, setPageProject] = useState("NoProject");
+
   const handleAddProject = () => {
     setPageProject("NewProjectForm");
   };
@@ -26,11 +36,37 @@ const App = () => {
     setPageProject(title);
   };
 
+  const handleDeleteProject = (removeProject) => {
+    setProjectForm(
+      projectForm.filter((project) => project.title !== removeProject)
+    );
+    setPageProject("NoProject");
+  };
+
+  const handleDeleteTask = (removeTask) => {
+    const updateTask = projectForm.map((project) => {
+      return {
+        ...project,
+        task: project.task.filter((task) => task !== removeTask),
+      };
+    });
+    setProjectForm(updateTask);
+  };
+
   let pageContent;
-  const selectProject = projectForm.filter(
+  const selectProject = projectForm.find(
     (project) => project.title === pageProject
   );
-  console.log(selectProject);
+
+  const handleAddNewTask = (projectTitle, newTask) => {
+    const projectIndex = projectForm.findIndex(
+      (project) => project.title === projectTitle
+    );
+    const updateProject = [...projectForm];
+    updateProject[projectIndex].task.push(newTask);
+    setProjectForm(updateProject);
+  };
+
   if (pageProject === "NewProjectForm") {
     pageContent = (
       <NewProjectForm
@@ -41,11 +77,16 @@ const App = () => {
   } else if (pageProject === "NoProject") {
     pageContent = <NoProject onAddProject={handleAddProject} />;
   } else {
-    pageContent = <ProjectDetail selectProject={selectProject} />;
+    pageContent = (
+      <ProjectDetail
+        selectProject={selectProject}
+        onDeleteProject={handleDeleteProject}
+        onAddNewTask={handleAddNewTask}
+        onDeleteTask={handleDeleteTask}
+      />
+    );
   }
 
-  // console.log(pageProject);
-  // console.log(projectForm);
   return (
     <>
       <YourProject
