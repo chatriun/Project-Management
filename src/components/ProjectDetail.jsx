@@ -1,10 +1,4 @@
-import {
-  useState,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  useEffect,
-} from "react";
+import { useRef } from "react";
 
 const ProjectDetail = ({
   selectProject,

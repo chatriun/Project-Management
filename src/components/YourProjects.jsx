@@ -14,14 +14,12 @@ const YourProject = ({ projectForm, onAddProject, onSelectProject }) => {
       </div>
       <div className="ml-6">
         {projectForm &&
-          projectForm.map((project) => (
-            <li
-              className="list-none text-slate-200 font-normal py-1"
-              key={project.description}
-            >
+          projectForm.map((project, index) => (
+            <li className="list-none text-slate-200 font-normal py-1">
               <button
+                key={`${index}-${project.description}`}
                 className="bg-stone-700 min-w-64 p-2 text-left"
-                onClick={() => onSelectProject(project.title)}
+                onClick={() => onSelectProject(project.description)}
               >
                 {project.title}
               </button>

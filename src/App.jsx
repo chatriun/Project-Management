@@ -13,34 +13,68 @@ const INITIAL_PROJECT_FORM = [
   },
 ];
 
+const page = {
+  noProject: "noProject",
+  newProjectForm: "newProjectForm",
+  projectDetail: "projectDetail",
+};
+
 const App = () => {
   const [projectForm, setProjectForm] = useState([]);
-  const [pageProject, setPageProject] = useState("NoProject");
+  const [pageProject, setPageProject] = useState(page.noProject);
+  let selectProject;
 
   const handleAddProject = () => {
-    setPageProject("NewProjectForm");
+    setPageProject(page.newProjectForm);
   };
   const handleCancelProject = () => {
-    setPageProject("NoProject");
+    setPageProject(page.noProject);
   };
+
+  console.log(projectForm.length);
 
   const handleForm = (newProject) => {
     setProjectForm((preProject) => {
-      const updateProject = [...preProject, newProject];
-      return updateProject;
+      const updatePage = [...preProject, newProject];
+      return updatePage;
     });
-    setPageProject(newProject.title);
-  };
+    if (projectForm.length > 1) {
+      selectProject = projectForm.find(
+        (project) => project.description === description
+      );
+    }
+    setPageProject(page.projectDetail);
 
-  const handleSelectProject = (title) => {
-    setPageProject(title);
+    // setPageProject((prePageProject) => {
+    //   const updatePage = {
+    //     ...prePageProject,
+    //     newPageTitle: newProject.title,
+    //   };
+    //   return updatePage;
+    // });
+  };
+  console.log(pageProject);
+  console.log(projectForm);
+
+  const handleSelectProject = (description) => {
+    // selectProject = projectForm.find(
+    //   (project) => project.description === description
+    // );
+    if (projectForm.length > 1) {
+      selectProject = projectForm.find(
+        (project) => project.description === description
+      );
+    } else if (projectForm.length === 1) {
+      selectProject = projectForm[0];
+    }
+    setPageProject(page.projectDetail);
   };
 
   const handleDeleteProject = (removeProject) => {
     setProjectForm(
       projectForm.filter((project) => project.title !== removeProject)
     );
-    setPageProject("NoProject");
+    setPageProject(page.noProject);
   };
 
   const handleDeleteTask = (removeTask) => {
@@ -53,10 +87,10 @@ const App = () => {
     setProjectForm(updateTask);
   };
 
-  let pageContent;
-  const selectProject = projectForm.find(
-    (project) => project.title === pageProject
-  );
+  let pageContent = null;
+  // const selectProject = projectForm.find(
+  //   (project) => project.title === pageProject
+  // );
 
   const handleAddNewTask = (projectTitle, newTask) => {
     const projectIndex = projectForm.findIndex(
@@ -67,16 +101,26 @@ const App = () => {
     setProjectForm(updateProject);
   };
 
-  if (pageProject === "NewProjectForm") {
+  const getSelectProject = (description) => {
+    if (projectForm.length === 1) {
+      selectProject = projectForm[0];
+    } else if (projectForm.length > 1) {
+      selectProject = projectForm.find(
+        (project) => project.description === description
+      );
+    }
+  };
+
+  if (pageProject === page.newProjectForm) {
     pageContent = (
       <NewProjectForm
         onAddProject={handleForm}
         onCancelProject={handleCancelProject}
       />
     );
-  } else if (pageProject === "NoProject") {
+  } else if (pageProject === page.noProject) {
     pageContent = <NoProject onAddProject={handleAddProject} />;
-  } else {
+  } else if (pageProject === page.projectDetail) {
     pageContent = (
       <ProjectDetail
         selectProject={selectProject}
@@ -87,6 +131,7 @@ const App = () => {
     );
   }
 
+  console.log(selectProject);
   return (
     <>
       <YourProject
